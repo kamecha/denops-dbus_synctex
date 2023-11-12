@@ -1,4 +1,4 @@
-import { dbus } from "./deps.ts";
+import { dbus, ensure, is } from "./deps.ts";
 import type { Denops } from "./deps.ts";
 
 export async function main(denops: Denops) {
@@ -16,6 +16,10 @@ export async function main(denops: Denops) {
       line: unknown,
       column: unknown,
     ): Promise<void> {
+      ensure(texPath, is.String);
+      ensure(pdfPath, is.String);
+      ensure(line, is.Number);
+      ensure(column, is.Number);
       const daemon = obj.getInterface("org.gnome.evince.Daemon");
       const pdfURI = `file://${pdfPath}`;
       const owner: string = await daemon.FindDocument(
@@ -45,6 +49,8 @@ export async function main(denops: Denops) {
       pdfPath: unknown,
       callback: unknown,
     ): Promise<void> {
+      ensure(pdfPath, is.String);
+      ensure(callback, is.String);
       const daemon = obj.getInterface("org.gnome.evince.Daemon");
       const pdfURI = `file://${pdfPath}`;
       const owner: string = await daemon.FindDocument(
