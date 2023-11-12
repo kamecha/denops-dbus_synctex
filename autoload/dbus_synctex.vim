@@ -1,3 +1,10 @@
+function dbus_synctex#createSessionBus() abort
+	call denops#request('dbus_synctex', 'createSessionBus', [])
+endfunction
+
+function dbus_synctex#destroySessionBus() abort
+	call denops#request('dbus_synctex', 'destroySessionBus', [])
+endfunction
 
 function dbus_synctex#syncView(texPath, pdfPath, line, col) abort
 	call denops#request(
