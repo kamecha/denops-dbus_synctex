@@ -15,6 +15,7 @@ export function main(denops: Denops) {
       }
       await bus.releaseName("denops.dbus");
       bus.disconnect();
+      bus = undefined;
     },
     async syncView(
       texPath: unknown,
