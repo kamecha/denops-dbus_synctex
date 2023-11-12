@@ -4,10 +4,6 @@ import type { Denops } from "./deps.ts";
 export async function main(denops: Denops) {
   const bus = dbus.sessionBus();
   await bus.requestName("denops.dbus", 0);
-  const obj = await bus.getProxyObject(
-    "org.gnome.evince.Daemon",
-    "/org/gnome/evince/Daemon",
-  );
 
   denops.dispatcher = {
     async syncView(
@@ -20,6 +16,10 @@ export async function main(denops: Denops) {
       ensure(pdfPath, is.String);
       ensure(line, is.Number);
       ensure(column, is.Number);
+      const obj = await bus.getProxyObject(
+        "org.gnome.evince.Daemon",
+        "/org/gnome/evince/Daemon",
+      );
       const daemon = obj.getInterface("org.gnome.evince.Daemon");
       const pdfURI = `file://${pdfPath}`;
       const owner: string = await daemon.FindDocument(
@@ -51,6 +51,10 @@ export async function main(denops: Denops) {
     ): Promise<void> {
       ensure(pdfPath, is.String);
       ensure(callback, is.String);
+      const obj = await bus.getProxyObject(
+        "org.gnome.evince.Daemon",
+        "/org/gnome/evince/Daemon",
+      );
       const daemon = obj.getInterface("org.gnome.evince.Daemon");
       const pdfURI = `file://${pdfPath}`;
       const owner: string = await daemon.FindDocument(
