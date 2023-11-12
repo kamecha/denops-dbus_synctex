@@ -2,7 +2,7 @@ import { dbus, ensure, is } from "./deps.ts";
 import type { Denops } from "./deps.ts";
 
 export function main(denops: Denops) {
-  let bus: dbus.MessageBus;
+  let bus: dbus.MessageBus | undefined;
 
   denops.dispatcher = {
     async createSessionBus(): Promise<void> {
@@ -10,6 +10,9 @@ export function main(denops: Denops) {
       await bus.requestName("denops.dbus", 0);
     },
     async destroySessionBus(): Promise<void> {
+      if (bus === undefined) {
+        return;
+      }
       await bus.releaseName("denops.dbus");
       bus.disconnect();
     },
@@ -23,6 +26,9 @@ export function main(denops: Denops) {
       ensure(pdfPath, is.String);
       ensure(line, is.Number);
       ensure(column, is.Number);
+      if (bus === undefined) {
+        throw new Error("Session bus is not created");
+      }
       const obj = await bus.getProxyObject(
         "org.gnome.evince.Daemon",
         "/org/gnome/evince/Daemon",
@@ -58,6 +64,9 @@ export function main(denops: Denops) {
     ): Promise<void> {
       ensure(pdfPath, is.String);
       ensure(callback, is.String);
+      if (bus === undefined) {
+        throw new Error("Session bus is not created");
+      }
       const obj = await bus.getProxyObject(
         "org.gnome.evince.Daemon",
         "/org/gnome/evince/Daemon",
