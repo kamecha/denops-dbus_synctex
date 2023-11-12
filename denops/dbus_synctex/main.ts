@@ -1,11 +1,18 @@
 import { dbus, ensure, is } from "./deps.ts";
 import type { Denops } from "./deps.ts";
 
-export async function main(denops: Denops) {
-  const bus = dbus.sessionBus();
-  await bus.requestName("denops.dbus", 0);
+export function main(denops: Denops) {
+  let bus: dbus.MessageBus;
 
   denops.dispatcher = {
+    async createSessionBus(): Promise<void> {
+      bus = dbus.sessionBus();
+      await bus.requestName("denops.dbus", 0);
+    },
+    async destroySessionBus(): Promise<void> {
+      await bus.releaseName("denops.dbus");
+      bus.disconnect();
+    },
     async syncView(
       texPath: unknown,
       pdfPath: unknown,
