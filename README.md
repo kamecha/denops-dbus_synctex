@@ -37,10 +37,10 @@ endfunction
 function s:initSyncTeX() abort
 	call dbus_synctex#createSessionBus()
 	call dbus_synctex#registerCallback(
-				\function("s:syncSource"))
+				\ function("s:syncSource"))
 	call dbus_synctex#registerSyncSource(
-				\expand('%:p')->substitute(".tex$", ".pdf", ""),
-				\)
+				\ expand('%:p')->substitute(".tex$", ".pdf", ""),
+				\ )
 endfunction
 
 autocmd User DenopsPluginPost:dbus_synctex
