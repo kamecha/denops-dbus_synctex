@@ -1,4 +1,4 @@
-import { dbus, ensure, is } from "./deps.ts";
+import { assert, dbus, is } from "./deps.ts";
 import type { Denops } from "./deps.ts";
 
 export function main(denops: Denops) {
@@ -23,10 +23,10 @@ export function main(denops: Denops) {
       line: unknown,
       column: unknown,
     ): Promise<void> {
-      ensure(texPath, is.String);
-      ensure(pdfPath, is.String);
-      ensure(line, is.Number);
-      ensure(column, is.Number);
+      assert(texPath, is.String);
+      assert(pdfPath, is.String);
+      assert(line, is.Number);
+      assert(column, is.Number);
       if (bus === undefined) {
         throw new Error("Session bus is not created");
       }
@@ -63,8 +63,8 @@ export function main(denops: Denops) {
       pdfPath: unknown,
       callback: unknown,
     ): Promise<void> {
-      ensure(pdfPath, is.String);
-      ensure(callback, is.String);
+      assert(pdfPath, is.String);
+      assert(callback, is.String);
       if (bus === undefined) {
         throw new Error("Session bus is not created");
       }
