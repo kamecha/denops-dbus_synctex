@@ -7,9 +7,10 @@ export function main(denops: Denops) {
 
   async function findWindowInterface(
     pdfPath: string,
-  ): Promise<dbus.ClientInterface> {
+  ): Promise<dbus.ClientInterface | undefined> {
     if (bus === undefined) {
-      throw new Error("Session bus is not created");
+      console.warn("Session bus is not created");
+      return undefined;
     }
     const obj = await bus.getProxyObject(
       "org.gnome.evince.Daemon",
@@ -21,6 +22,9 @@ export function main(denops: Denops) {
       pdfURI,
       false,
     );
+    if (owner === "") {
+      return undefined;
+    }
     const evince = await bus.getProxyObject(
       owner,
       "/org/gnome/evince/Evince",
@@ -60,6 +64,10 @@ export function main(denops: Denops) {
       assert(line, is.Number);
       assert(column, is.Number);
       const window = await findWindowInterface(pdfPath);
+      if (window === undefined) {
+        console.warn("No window found");
+        return;
+      }
       await window.SyncView(
         texPath,
         [line, column],
@@ -83,6 +91,10 @@ export function main(denops: Denops) {
       const window = await findWindowInterface(pdfPath);
       if (tmpCallback === undefined) {
         throw new Error("Callback is not registered");
+      }
+      if (window === undefined) {
+        console.warn("No window found");
+        return;
       }
       window.on(
         "SyncSource",
