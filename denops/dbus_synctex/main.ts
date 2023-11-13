@@ -5,17 +5,17 @@ export function main(denops: Denops) {
   let bus: dbus.MessageBus | undefined;
 
   denops.dispatcher = {
-    async createSessionBus(): Promise<void> {
+    createSessionBus(): Promise<void> {
       bus = dbus.sessionBus();
-      await bus.requestName("denops.dbus", 0);
+      return Promise.resolve();
     },
-    async destroySessionBus(): Promise<void> {
+    destroySessionBus(): Promise<void> {
       if (bus === undefined) {
-        return;
+        return Promise.resolve();
       }
-      await bus.releaseName("denops.dbus");
       bus.disconnect();
       bus = undefined;
+      return Promise.resolve();
     },
     async syncView(
       texPath: unknown,
