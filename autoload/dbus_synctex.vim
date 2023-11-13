@@ -18,13 +18,16 @@ function dbus_synctex#syncView(texPath, pdfPath, line, col) abort
 				\])
 endfunction
 
-function dbus_synctex#registerSyncSourceCallback(pdfPath, func) abort
+function dbus_synctex#registerCallback(func) abort
 	let callback = denops#callback#register(a:func)
 	call denops#request(
 				\'dbus_synctex',
-				\'registerSyncSource',
+				\'registerCallback',
 				\[
-				\	a:pdfPath,
 				\	callback,
 				\])
+endfunction
+
+function dbus_synctex#registerSyncSource(pdfPath) abort
+	call denops#request('dbus_synctex', 'registerSyncSource', [a:pdfPath])
 endfunction

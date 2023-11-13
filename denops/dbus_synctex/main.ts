@@ -3,6 +3,7 @@ import type { Denops } from "./deps.ts";
 
 export function main(denops: Denops) {
   let bus: dbus.MessageBus | undefined;
+  let tmpCallback: string | undefined;
 
   denops.dispatcher = {
     createSessionBus(): Promise<void> {
@@ -59,12 +60,20 @@ export function main(denops: Denops) {
         0,
       );
     },
+    registerCallback(
+      callback: unknown
+    ): Promise<void> {
+      assert(callback, is.String);
+      if (bus === undefined) {
+        throw new Error("Session bus is not created");
+      }
+      tmpCallback = callback;
+      return Promise.resolve();
+    },
     async registerSyncSource(
       pdfPath: unknown,
-      callback: unknown,
     ): Promise<void> {
       assert(pdfPath, is.String);
-      assert(callback, is.String);
       if (bus === undefined) {
         throw new Error("Session bus is not created");
       }
@@ -91,12 +100,15 @@ export function main(denops: Denops) {
       const windowPath = windowList[0];
       const windowProxy = await bus.getProxyObject(owner, windowPath);
       const window = windowProxy.getInterface("org.gnome.evince.Window");
+      if (tmpCallback === undefined) {
+        throw new Error("Callback is not registered");
+      }
       window.on(
         "SyncSource",
         async (path: string, point: [number, number], time: number) => {
           await denops.call(
             "denops#callback#call",
-            callback,
+            tmpCallback,
             path,
             point[0],
             point[1],
