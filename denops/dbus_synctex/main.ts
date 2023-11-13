@@ -5,6 +5,37 @@ export function main(denops: Denops) {
   let bus: dbus.MessageBus | undefined;
   let tmpCallback: string | undefined;
 
+  async function findWindowInterface(
+    pdfPath: string,
+  ): Promise<dbus.ClientInterface> {
+    if (bus === undefined) {
+      throw new Error("Session bus is not created");
+    }
+    const obj = await bus.getProxyObject(
+      "org.gnome.evince.Daemon",
+      "/org/gnome/evince/Daemon",
+    );
+    const daemon = obj.getInterface("org.gnome.evince.Daemon");
+    const pdfURI = `file://${pdfPath}`;
+    const owner: string = await daemon.FindDocument(
+      pdfURI,
+      false,
+    );
+    const evince = await bus.getProxyObject(
+      owner,
+      "/org/gnome/evince/Evince",
+    );
+    const app = evince.getInterface("org.gnome.evince.Application");
+    const windowList = await app.GetWindowList();
+    if (windowList.length === 0) {
+      throw new Error("No window found");
+    }
+    const windowPath = windowList[0];
+    const windowProxy = await bus.getProxyObject(owner, windowPath);
+    const window = windowProxy.getInterface("org.gnome.evince.Window");
+    return window;
+  }
+
   denops.dispatcher = {
     createSessionBus(): Promise<void> {
       bus = dbus.sessionBus();
@@ -28,32 +59,7 @@ export function main(denops: Denops) {
       assert(pdfPath, is.String);
       assert(line, is.Number);
       assert(column, is.Number);
-      if (bus === undefined) {
-        throw new Error("Session bus is not created");
-      }
-      const obj = await bus.getProxyObject(
-        "org.gnome.evince.Daemon",
-        "/org/gnome/evince/Daemon",
-      );
-      const daemon = obj.getInterface("org.gnome.evince.Daemon");
-      const pdfURI = `file://${pdfPath}`;
-      const owner: string = await daemon.FindDocument(
-        pdfURI,
-        false,
-      );
-      const evince = await bus.getProxyObject(
-        owner,
-        "/org/gnome/evince/Evince",
-      );
-      const app = evince.getInterface("org.gnome.evince.Application");
-      const windowList = await app.GetWindowList();
-      if (windowList.length === 0) {
-        throw new Error("No window found");
-      }
-
-      const windowPath = windowList[0];
-      const windowProxy = await bus.getProxyObject(owner, windowPath);
-      const window = windowProxy.getInterface("org.gnome.evince.Window");
+      const window = await findWindowInterface(pdfPath);
       await window.SyncView(
         texPath,
         [line, column],
@@ -61,7 +67,7 @@ export function main(denops: Denops) {
       );
     },
     registerCallback(
-      callback: unknown
+      callback: unknown,
     ): Promise<void> {
       assert(callback, is.String);
       if (bus === undefined) {
@@ -74,32 +80,7 @@ export function main(denops: Denops) {
       pdfPath: unknown,
     ): Promise<void> {
       assert(pdfPath, is.String);
-      if (bus === undefined) {
-        throw new Error("Session bus is not created");
-      }
-      const obj = await bus.getProxyObject(
-        "org.gnome.evince.Daemon",
-        "/org/gnome/evince/Daemon",
-      );
-      const daemon = obj.getInterface("org.gnome.evince.Daemon");
-      const pdfURI = `file://${pdfPath}`;
-      const owner: string = await daemon.FindDocument(
-        pdfURI,
-        false,
-      );
-      const evince = await bus.getProxyObject(
-        owner,
-        "/org/gnome/evince/Evince",
-      );
-      const app = evince.getInterface("org.gnome.evince.Application");
-      const windowList = await app.GetWindowList();
-      if (windowList.length === 0) {
-        throw new Error("No window found");
-      }
-
-      const windowPath = windowList[0];
-      const windowProxy = await bus.getProxyObject(owner, windowPath);
-      const window = windowProxy.getInterface("org.gnome.evince.Window");
+      const window = await findWindowInterface(pdfPath);
       if (tmpCallback === undefined) {
         throw new Error("Callback is not registered");
       }
