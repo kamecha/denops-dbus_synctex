@@ -5,68 +5,6 @@ export function main(denops: Denops) {
   let bus: dbus.MessageBus | undefined;
   let tmpCallback: string | undefined;
 
-  async function findWindowInterface(
-    pdfPath: string,
-  ): Promise<dbus.ClientInterface | undefined> {
-    if (bus === undefined) {
-      console.warn("Session bus is not created");
-      return undefined;
-    }
-    const obj = await bus.getProxyObject(
-      "org.gnome.evince.Daemon",
-      "/org/gnome/evince/Daemon",
-    );
-    const daemon = obj.getInterface("org.gnome.evince.Daemon");
-    const pdfURI = `file://${pdfPath}`;
-    const owner: string = await daemon.FindDocument(
-      pdfURI,
-      false,
-    );
-    if (owner === "") {
-      return undefined;
-    }
-    const evince = await bus.getProxyObject(
-      owner,
-      "/org/gnome/evince/Evince",
-    );
-    const app = evince.getInterface("org.gnome.evince.Application");
-    const windowList = await app.GetWindowList();
-    if (windowList.length === 0) {
-      throw new Error("No window found");
-    }
-    const windowPath = windowList[0];
-    const windowProxy = await bus.getProxyObject(owner, windowPath);
-    const window = windowProxy.getInterface("org.gnome.evince.Window");
-    return window;
-  }
-
-  function getPdfPath(root: string): string | undefined {
-    const queue: string[] = [root];
-    const bfs = (path: string): string | undefined => {
-      const dir = Deno.readDirSync(path);
-      for (const entry of dir) {
-        if (entry.isFile && entry.name.endsWith(".pdf")) {
-          return `${path}/${entry.name}`;
-        }
-        if (entry.isDirectory) {
-          queue.push(`${path}/${entry.name}`);
-        }
-      }
-      return undefined;
-    };
-    while (queue.length > 0) {
-      const path = queue.shift();
-      if (path === undefined) {
-        continue;
-      }
-      const pdfPath = bfs(path);
-      if (pdfPath !== undefined) {
-        return pdfPath;
-      }
-    }
-    return undefined;
-  }
-
   denops.dispatcher = {
     findPdfPath(root: unknown): Promise<string> {
       assert(root, is.String);
@@ -146,4 +84,65 @@ export function main(denops: Denops) {
       );
     },
   };
+
+  async function findWindowInterface(
+    pdfPath: string,
+  ): Promise<dbus.ClientInterface | undefined> {
+    if (bus === undefined) {
+      console.warn("Session bus is not created");
+      return undefined;
+    }
+    const obj = await bus.getProxyObject(
+      "org.gnome.evince.Daemon",
+      "/org/gnome/evince/Daemon",
+    );
+    const daemon = obj.getInterface("org.gnome.evince.Daemon");
+    const pdfURI = `file://${pdfPath}`;
+    const owner: string = await daemon.FindDocument(
+      pdfURI,
+      false,
+    );
+    if (owner === "") {
+      return undefined;
+    }
+    const evince = await bus.getProxyObject(
+      owner,
+      "/org/gnome/evince/Evince",
+    );
+    const app = evince.getInterface("org.gnome.evince.Application");
+    const windowList = await app.GetWindowList();
+    if (windowList.length === 0) {
+      throw new Error("No window found");
+    }
+    const windowPath = windowList[0];
+    const windowProxy = await bus.getProxyObject(owner, windowPath);
+    const window = windowProxy.getInterface("org.gnome.evince.Window");
+    return window;
+  }
+  function getPdfPath(root: string): string | undefined {
+    const queue: string[] = [root];
+    const bfs = (path: string): string | undefined => {
+      const dir = Deno.readDirSync(path);
+      for (const entry of dir) {
+        if (entry.isFile && entry.name.endsWith(".pdf")) {
+          return `${path}/${entry.name}`;
+        }
+        if (entry.isDirectory) {
+          queue.push(`${path}/${entry.name}`);
+        }
+      }
+      return undefined;
+    };
+    while (queue.length > 0) {
+      const path = queue.shift();
+      if (path === undefined) {
+        continue;
+      }
+      const pdfPath = bfs(path);
+      if (pdfPath !== undefined) {
+        return pdfPath;
+      }
+    }
+    return undefined;
+  }
 }
