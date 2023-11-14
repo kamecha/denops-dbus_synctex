@@ -21,13 +21,7 @@ set rtp+=~/path/to/kamecha/denops-dbus_synctex
 autocmd FileType tex call s:TexKeymap()
 
 function! s:TexKeymap() abort
-	nnoremap <buffer> <Leader>s
-				\ <Cmd>call dbus_synctex#syncView(
-				\		expand("%:p"),
-				\		expand("%:p")->substitute(".tex$", ".pdf", ""),
-				\		line("."),
-				\		col("."),
-				\	)<CR>
+	nnoremap <buffer> <Leader>s <Cmd>:DbusSyncView<CR>
 endfunction
 
 function s:syncSource(texPath, line, col, time) abort
@@ -36,11 +30,8 @@ endfunction
 
 function s:initSyncTeX() abort
 	call dbus_synctex#createSessionBus()
-	call dbus_synctex#registerCallback(
-				\ function("s:syncSource"))
-	call dbus_synctex#registerSyncSource(
-				\ expand('%:p')->substitute(".tex$", ".pdf", ""),
-				\ )
+	call dbus_synctex#registerCallback(function("s:syncSource"))
+	call dbus_synctex#registerSyncSource(dbus_synctex#getCWDPdfPath())
 endfunction
 
 autocmd User DenopsPluginPost:dbus_synctex
