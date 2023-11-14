@@ -29,8 +29,13 @@ function s:syncSource(texPath, line, col, time) abort
 endfunction
 
 function s:initSyncTeX() abort
+	" create bus for link evince and vim
 	call dbus_synctex#createSessionBus()
+	" register syncSource callback to denops
 	call dbus_synctex#registerCallback(function("s:syncSource"))
+	" register denops's syncSource callback to evince.
+	" if evince window is not opened, this function does nothing.
+	" for command version, use :DbusRegisterSyncSource
 	call dbus_synctex#registerSyncSource(dbus_synctex#getCWDPdfPath())
 endfunction
 
