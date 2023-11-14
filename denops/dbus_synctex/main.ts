@@ -41,6 +41,9 @@ export function main(denops: Denops) {
         console.warn("No window found");
         return;
       }
+      // Intarface: org.gnome.evince.Window
+      // Method
+      // SyncView (String source_file, Struct of (Int32, Int32) source_point, UInt32 timestamp) -> ()
       await window.SyncView(
         texPath,
         [line, column],
@@ -69,6 +72,9 @@ export function main(denops: Denops) {
         console.warn("No window found");
         return;
       }
+      // Intarface: org.gnome.evince.Window
+      // Signal
+      // SyncSource (String source_file, Struct of (Int32, Int32) source_point, UInt32 timestamp)
       window.on(
         "SyncSource",
         async (path: string, point: [number, number], time: number) => {
