@@ -37,12 +37,7 @@ endfunction
 
 function dbus_synctex#registerCallback(func) abort
 	let callback = denops#callback#register(a:func)
-	call denops#request(
-				\'dbus_synctex',
-				\'registerCallback',
-				\[
-				\	callback,
-				\])
+	call denops#request('dbus_synctex', 'registerCallback', [callback])
 endfunction
 
 function dbus_synctex#registerSyncSource(pdfPath) abort
