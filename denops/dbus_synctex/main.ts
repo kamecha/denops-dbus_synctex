@@ -40,7 +40,42 @@ export function main(denops: Denops) {
     return window;
   }
 
+  function getPdfPath(root: string): string | undefined {
+    const queue: string[] = [root];
+    const bfs = (path: string): string | undefined => {
+      const dir = Deno.readDirSync(path);
+      for (const entry of dir) {
+        if (entry.isFile && entry.name.endsWith(".pdf")) {
+          return `${path}/${entry.name}`;
+        }
+        if (entry.isDirectory) {
+          queue.push(`${path}/${entry.name}`);
+        }
+      }
+      return undefined;
+    };
+    while (queue.length > 0) {
+      const path = queue.shift();
+      if (path === undefined) {
+        continue;
+      }
+      const pdfPath = bfs(path);
+      if (pdfPath !== undefined) {
+        return pdfPath;
+      }
+    }
+    return undefined;
+  }
+
   denops.dispatcher = {
+    findPdfPath(root: unknown): Promise<string> {
+      assert(root, is.String);
+      const pdfPath = getPdfPath(root);
+      if (pdfPath === undefined) {
+        return Promise.reject(new Error("No pdf found"));
+      }
+      return Promise.resolve(pdfPath);
+    },
     createSessionBus(): Promise<void> {
       bus = dbus.sessionBus();
       return Promise.resolve();
