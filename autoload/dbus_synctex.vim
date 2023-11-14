@@ -27,6 +27,14 @@ function dbus_synctex#syncView(texPath, pdfPath, line, col) abort
 				\])
 endfunction
 
+function dbus_synctex#syncViewCWD() abort
+	let pdfPath = dbus_synctex#getCWDPdfPath()
+	if pdfPath ==# ''
+		return
+	endif
+	call dbus_synctex#syncView(expand('%:p'), pdfPath, line('.'), col('.'))
+endfunction
+
 function dbus_synctex#registerCallback(func) abort
 	let callback = denops#callback#register(a:func)
 	call denops#request(

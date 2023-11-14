@@ -72,7 +72,7 @@ export function main(denops: Denops) {
       assert(root, is.String);
       const pdfPath = getPdfPath(root);
       if (pdfPath === undefined) {
-        return Promise.reject(new Error("No pdf found"));
+        return Promise.resolve("");
       }
       return Promise.resolve(pdfPath);
     },
