@@ -1,3 +1,12 @@
+
+function dbus_synctex#getPdfPath(dir) abort
+	return denops#request('dbus_synctex', 'findPdfPath', [a:dir])
+endfunction
+
+function dbus_synctex#getCWDPdfPath() abort
+	return dbus_synctex#getPdfPath(expand('%:p:h'))
+endfunction
+
 function dbus_synctex#createSessionBus() abort
 	call denops#request('dbus_synctex', 'createSessionBus', [])
 endfunction
