@@ -1,0 +1,98 @@
+*dbus_synctex.txt*	syncTeX support for vim through DBus using deno
+
+Author: kamecha
+
+=============================================================================
+CONTENTS					*denops-dbus_synctex*
+
+INTRODUCTION					|denops-dbus_synctex-introduction|
+USAGE					|denops-dbus_synctex-usage|
+INTERFACE				|denops-dbus_synctex-interface|
+  COMMANDS				|denops-dbus_synctex-commands|
+  FUNCTION				|denops-dbus_synctex-function|
+
+=============================================================================
+INTRODUCTION					*denops-dbus_synctex-introduction*
+
+*denops-dbus_synctex* is a plugin which provides a syncTeX support for vim.
+
+=============================================================================
+USAGE						*denops-dbus_synctex-usage*
+
+This plugin use dbus to communicate with the PDF viewer.
+In detail, this plugin create a session bus to communicate with the PDF viewer.
+So, you need to start the bus using |dbus_synctex#createSessionBus()|.
+
+For SyncView, you have to register the callback function to the PDF viewer.
+To register callback function, you can set it as below.
+
+>
+	function s:syncSource(texPath, line, col, time) abort
+		call cursor([a:line, a:col < 0 ? 1 : a:col])
+	endfunction
+
+	function s:initSyncTeX() abort
+		call dbus_synctex#createSessionBus()
+		call dbus_synctex#registerCallback(function("s:syncSource"))
+		call dbus_synctex#registerSyncSource(dbus_synctex#getCWDPdfPath())
+	endfunction
+
+	autocmd User DenopsPluginPost:dbus_synctex call s:initSyncTeX()
+<
+
+=============================================================================
+INTERFACE					*denops-dbus_synctex-interface*
+
+-----------------------------------------------------------------------------
+COMMANDS						*denops-dbus_synctex-commands*
+
+								*DbusSyncView*
+:DbusSyncView
+	Sync the PDF viewer to the current line and column position.
+
+								*DbusRegisterSyncSource*
+:DbusRegisterSyncSource
+	Register the callback function to the window which displays the PDF file
+	under the current working directory.
+
+-----------------------------------------------------------------------------
+FUNCTION						*denops-dbus_synctex-function*
+
+						*dbus_synctex#getPdfPath()*
+dbus_synctex#getPdfPath({dir})
+	Return the path of the PDF file under the {dir} directory.
+	If no pdf path is found, return empty string.
+
+						*dbus_synctex#getCWDPdfPath()*
+dbus_synctex#getCWDPdfPath()
+	Return the path of the PDF file under the current working directory.
+	If no pdf path is found, return empty string.
+
+						*dbus_synctex#createSessionBus()*
+dbus_synctex#createSessionBus()
+	Create a session bus.
+
+						*dbus_synctex#destroySessionBus()*
+dbus_synctex#destroySessionBus()
+	Destroy the session bus.
+
+						*dbus_synctex#syncView()*
+dbus_synctex#syncView({texPath}, {pdfPath}, {line}, {col})
+	Sync the PDF viewer to the {line} and {col} position of the {texPath}
+	file. The {pdfPath} is the path of the PDF file.
+
+						*dbus_synctex#syncViewCWD()*
+dbus_synctex#syncViewCWD()
+	Sync the PDF viewer from the current working directory.
+
+						*dbus_synctex#registerCallback()*
+dbus_synctex#registerCallback({func})
+	Register the callback function {func} to the denops.
+
+						*dbus_synctex#registerSyncSource()*
+dbus_synctex#registerSyncSource({pdfPath})
+	Register the callback function to the window which displays the {pdfPath}
+
+=============================================================================
+vim:tw=78:ts=8:ft=help:norl
+
