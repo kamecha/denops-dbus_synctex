@@ -89,6 +89,14 @@ dbus_synctex#syncViewCWD()
 						*dbus_synctex#registerCallback()*
 dbus_synctex#registerCallback({func})
 	Register the callback function {func} to the denops.
+	{func} must be a |Funcref| or the name of a function.
+	{func}'s arguments is bellow.
+		texPath: tex file URI which related to displaying pdf.
+			Example:( file:///home/example/unko.tex )
+		line: corresponding line
+		col: corresponding column
+		timeStamp: timeStamp
+	If you want to know more detail, check it out the keywords (dbus, evince...).
 
 						*dbus_synctex#registerSyncSource()*
 dbus_synctex#registerSyncSource({pdfPath})
