@@ -10,6 +10,7 @@ USAGE					|denops-dbus_synctex-usage|
 INTERFACE				|denops-dbus_synctex-interface|
   COMMANDS				|denops-dbus_synctex-commands|
   FUNCTION				|denops-dbus_synctex-function|
+  LUA FUNCTION				|denops-dbus_synctex-lua-function|
 
 =============================================================================
 INTRODUCTION					*denops-dbus_synctex-introduction*
@@ -92,6 +93,41 @@ dbus_synctex#registerCallback({func})
 						*dbus_synctex#registerSyncSource()*
 dbus_synctex#registerSyncSource({pdfPath})
 	Register the callback function to the window which displays the {pdfPath}
+
+-----------------------------------------------------------------------------
+LUA FUNCTION						*denops-dbus_synctex-lua-function*
+
+						*dbus_synctex.getPdfPath()*
+dbus_synctex.getPdfPath({dir})
+	Same as |dbus_synctex#getPdfPath()|.
+
+						*dbus_synctex.getPdfPathCWD()*
+dbus_synctex.getPdfPathCWD()
+	Same as |dbus_synctex#getPdfPathCWD()|.
+
+						*dbus_synctex.createSessionBus()*
+dbus_synctex.createSessionBus()
+	Same as |dbus_synctex#createSessionBus()|.
+
+						*dbus_synctex.destroySessionBus()*
+dbus_synctex.destroySessionBus()
+	Same as |dbus_synctex#destroySessionBus()|.
+
+						*dbus_synctex.syncView()*
+dbus_synctex.syncView({texPath}, {pdfPath}, {line}, {col})
+	Same as |dbus_synctex#syncView()|.
+
+						*dbus_synctex.syncViewCWD()*
+dbus_synctex.syncViewCWD()
+	Same as |dbus_synctex#syncViewCWD()|.
+
+						*dbus_synctex.registerCallback()*
+dbus_synctex.registerCallback({func})
+	Same as |dbus_synctex#registerCallback()|.
+
+						*dbus_synctex.registerSyncSource()*
+dbus_synctex.registerSyncSource({pdfPath})
+	Same as |dbus_synctex#registerSyncSource()|.
 
 =============================================================================
 vim:tw=78:ts=8:ft=help:norl
