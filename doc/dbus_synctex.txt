@@ -34,7 +34,7 @@ To register callback function, you can set it as below.
 	function s:initSyncTeX() abort
 		call dbus_synctex#createSessionBus()
 		call dbus_synctex#registerCallback(function("s:syncSource"))
-		call dbus_synctex#registerSyncSource(dbus_synctex#getCWDPdfPath())
+		call dbus_synctex#registerSyncSource(dbus_synctex#getPdfPathCWD())
 	endfunction
 
 	autocmd User DenopsPluginPost:dbus_synctex call s:initSyncTeX()
