@@ -26,6 +26,26 @@ function M.destroySessionBus()
 	vim.fn["dbus_synctex#destroySessionBus"]()
 end
 
+--- sync View
+-- @param texPath string
+-- @param pdfPath string
+-- @param line number
+-- @param col number
+-- @return nil
+function M.syncView(texPath, pdfPath, line, col)
+	vim.fn["dbus_synctex#syncView"](texPath, pdfPath, line, col)
+end
+
+--- sync View to the pdf under current directory
+-- @return nil
+function M.syncViewCWD()
+	local pdfPath = M.getPdfPathCWD()
+	if pdfPath == "" then
+		return
+	end
+	M.syncView(vim.fn.expand("%:p"), pdfPath, vim.fn.line("."), vim.fn.col("."))
+end
+
 --- register callback to denops
 -- @param func function
 -- @return nil
