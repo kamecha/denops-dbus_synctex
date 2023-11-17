@@ -63,8 +63,8 @@ dbus_synctex#getPdfPath({dir})
 	Return the path of the PDF file under the {dir} directory.
 	If no pdf path is found, return empty string.
 
-						*dbus_synctex#getCWDPdfPath()*
-dbus_synctex#getCWDPdfPath()
+						*dbus_synctex#getPdfPathCWD()*
+dbus_synctex#getPdfPathCWD()
 	Return the path of the PDF file under the current working directory.
 	If no pdf path is found, return empty string.
 
