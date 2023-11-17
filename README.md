@@ -42,3 +42,28 @@ endfunction
 autocmd User DenopsPluginPost:dbus_synctex
 			\ call s:initSyncTeX()
 ```
+
+```lua
+vim.opt.rtp:append("~/path/to/vim-denops/denops.vim")
+vim.opt.rtp:append("~/path/to/kamecha/denops-dbus_synctex")
+
+local syncTex = require("dbus_synctex")
+
+vim.api.nvim_create_autocmd({ "FileType" }, {
+	pattern = "tex",
+	callback = function ()
+		vim.keymap.set("n", "<Leader>s", syncTex.syncViewCWD, { buffer = true })
+	end
+})
+
+vim.api.nvim_create_autocmd({ "User" }, {
+	pattern = "DenopsPluginPost:dbus_synctex",
+	callback = function()
+		syncTex.createSessionBus()
+		syncTex.registerCallback(function (_, line, col, _)
+			vim.fn.cursor({ line, col < 0 and 1 or col })
+		end)
+		syncTex.registerSyncSource(syncTex.getPdfPathCWD())
+	end
+})
+```
