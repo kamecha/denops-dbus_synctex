@@ -10,7 +10,7 @@ end
 
 --- get pdf Path under current directory
 -- @return string
-function M.getPdfPathCurrent()
+function M.getPdfPathCWD()
 	return M.getPdfPath(vim.fn.getcwd())
 end
 
