@@ -14,6 +14,8 @@ This vim plugin support syncTeX using dbus, especially evince.
 
 # Installation
 Below are the minimum settings for making it work.
+
+For init.vim (or .vimrc)
 ```vim
 set rtp+=~/path/to/vim-denops/denops.vim
 set rtp+=~/path/to/kamecha/denops-dbus_synctex
@@ -43,6 +45,7 @@ autocmd User DenopsPluginPost:dbus_synctex
 			\ call s:initSyncTeX()
 ```
 
+For init.lua
 ```lua
 vim.opt.rtp:append("~/path/to/vim-denops/denops.vim")
 vim.opt.rtp:append("~/path/to/kamecha/denops-dbus_synctex")
