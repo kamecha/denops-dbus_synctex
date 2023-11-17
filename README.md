@@ -36,7 +36,7 @@ function s:initSyncTeX() abort
 	" register denops's syncSource callback to evince.
 	" if evince window is not opened, this function does nothing.
 	" for command version, use :DbusRegisterSyncSource
-	call dbus_synctex#registerSyncSource(dbus_synctex#getCWDPdfPath())
+	call dbus_synctex#registerSyncSource(dbus_synctex#getPdfPathCWD())
 endfunction
 
 autocmd User DenopsPluginPost:dbus_synctex
