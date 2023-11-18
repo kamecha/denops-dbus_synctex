@@ -1,6 +1,14 @@
 # denops-dbus_synctex
 This vim plugin support syncTeX using dbus, especially evince.
 
+# Features
+- SyncView  
+	<img src="https://github.com/kamecha/denops-dbus_synctex/assets/50443168/5c05969d-679a-42d0-99db-16cc02243a22" width="60%">
+
+- SyncSource (Easy to customize)  
+  	Ex. customize callback using nvim-notify  
+	<img src="https://github.com/kamecha/denops-dbus_synctex/assets/50443168/7426ce27-e675-4117-aa66-7a110e3c3be4" width="60%">
+
 # Requirements
 - [deno](https://deno.com/)   
   JavaScript Runtime   
