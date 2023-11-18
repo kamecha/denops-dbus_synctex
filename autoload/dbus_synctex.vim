@@ -28,7 +28,7 @@ function dbus_synctex#syncView(texPath, pdfPath, line, col) abort
 endfunction
 
 function dbus_synctex#syncViewCWD() abort
-	let pdfPath = dbus_synctex#getCWDPdfPath()
+	let pdfPath = dbus_synctex#getPdfPathCWD()
 	if pdfPath ==# ''
 		return
 	endif
