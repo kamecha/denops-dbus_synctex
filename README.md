@@ -3,7 +3,7 @@ This vim plugin support syncTeX using dbus, especially evince.
 
 # Features
 - SyncView  
-	<img src="https://github.com/kamecha/denops-dbus_synctex/assets/50443168/5c05969d-679a-42d0-99db-16cc02243a22" width="60%">
+	<img src="https://github.com/kamecha/denops-dbus_synctex/assets/50443168/da5503a9-8f3c-4a6d-b2c6-34fb3d9beee3" width="60%">
 
 - SyncSource (Easy to customize)  
   	Ex. customize callback using nvim-notify  
