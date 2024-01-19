@@ -15,7 +15,7 @@ INTERFACE				|denops-dbus_synctex-interface|
 =============================================================================
 INTRODUCTION					*denops-dbus_synctex-introduction*
 
-*denops-dbus_synctex* is a plugin which provides a syncTeX support for vim.
+|denops-dbus_synctex| is a plugin which provides a syncTeX support for vim.
 
 =============================================================================
 USAGE						*denops-dbus_synctex-usage*
